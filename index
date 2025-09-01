@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NONT EP.03 สุรุ่ยสุร่าย CONCERT</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Sweet Alert 2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/534948415_1331173895043575_4572728567027180572_n.jpg?alt=media&token=dc263554-6436-4a5a-8597-4e80a29fc5e3');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .swal2-container {
+            z-index: 99999;
+        }
+        img.question-image {
+            border-radius: 12px;
+            margin-top: 8px;
+            width: 100%;
+            height: 150px; /* Adjust height to be fixed for uniform size */
+            object-fit: cover; /* Use cover to fill the container and crop if needed */
+            object-position: center; /* Center the image */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        /* Custom styles for horizontal options */
+        .question-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 8px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .question-option:hover {
+            border-color: #4f46e5;
+        }
+        .question-option.selected {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        /* New style for the full image in question 5 */
+        img.question-image-full {
+            border-radius: 12px;
+            margin-top: 8px;
+            width: 100%;
+            height: auto; /* Allows the image to scale naturally without cropping */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white bg-opacity-80 shadow-2xl rounded-3xl p-6 sm:p-10 w-full max-w-2xl transform transition-transform duration-500 hover:scale-105">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-800">NONT EP.03 สุรุ่ยสุร่าย CONCERT</h1>
+            <p class="mt-2 text-lg text-gray-600">กรุณากรอกข้อมูลเพื่อเข้าร่วมงาน</p>
+        </div>
+
+        <form id="data-form" class="space-y-6">
+
+            <!-- รหัสพนักงาน -->
+            <div>
+                <label for="employee_id" class="block text-lg font-medium text-gray-700">รหัสพนักงาน</label>
+                <input type="text" id="employee_id" name="employee_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 transition-all duration-300 ease-in-out hover:shadow-md bg-gray-100 bg-opacity-70">
+            </div>
+
+            <!-- ชื่อ-นามสกุล -->
+            <div>
+                <label for="full_name" class="block text-lg font-medium text-gray-700">ชื่อ-นามสกุล</label>
+                <input type="text" id="full_name" name="full_name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 transition-all duration-300 ease-in-out hover:shadow-md bg-gray-100 bg-opacity-70">
+            </div>
+
+            <!-- เบอร์ 3CX -->
+            <div>
+                <label for="threecx_number" class="block text-lg font-medium text-gray-700">เบอร์ 3CX</label>
+                <input type="text" id="threecx_number" name="threecx_number" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 transition-all duration-300 ease-in-out hover:shadow-md bg-gray-100 bg-opacity-70">
+            </div>
+
+            <!-- ฝ่าย -->
+            <div>
+                <label for="department" class="block text-lg font-medium text-gray-700">ฝ่าย</label>
+                <select id="department" name="department" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 transition-all duration-300 ease-in-out hover:shadow-md bg-gray-100 bg-opacity-70">
+                    <option value="">เลือกฝ่าย</option>
+                    <option value="Top Department">Top Department</option>
+                    <option value="Brand">Brand</option>
+                    <option value="Business Development">Business Development </option>
+                    <option value="Creative and Production Design Department">Creative and Production Design Department</option>
+                    <option value="F&B Department">F&B Department</option>
+                    <option value="Finance & Accounting">Finance & Accounting</option>
+                    <option value="Food & Service Business Development ">Food & Service Business Development</option>
+                    <option value="Human Resources">Human Resourcest</option>
+                    <option value="Information Technology">Information Technology </option>
+                    <option value="Internal Audit">Internal Audit</option>
+                    <option value="Leasing & Tenant">Leasing & Tenant</option>
+                    <option value="Legal">Legal</option>
+                    <option value="Local Area Marketing">Local Area Marketing </option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Management">Management</option>
+                    <option value="Marketing ">Marketing </option>
+                    <option value="Marketing Communication">Marketing Communication</option>
+                    <option value="Operation ">Operation</option>
+                    <option value="Programming & Film ">Programming & Film </option>
+                    <option value="Project">Project</option>
+                    <option value="Purchasing ">Purchasing </option>
+                    <option value="MAYA">MAYA</option>
+                </select>
+            </div>
+
+            <!-- คำถาม 1 -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">1. เพลงนี้ชื่อเพลงอะไร</label>
+                <!-- Video for Question 1 -->
+                <video controls>
+                    <source src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/66b33c4f-a791-4adb-ae14-2d99fe870417.mp4?alt=media&token=4fb49acb-d25c-4cd2-a9af-f0786f09c9ec" type="video/mp4">
+                    เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                </video>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q1_option1" name="question1" value="BADLY " required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q1_option1" class="text-lg text-gray-700">BADLY </label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q1_option2" name="question1" value="Temple Dogs" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q1_option2" class="text-lg text-gray-700">Temple Dogs</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q1_option3" name="question1" value="อยากให้เธอลองรัก" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q1_option3" class="text-lg text-gray-700">อยากให้เธอลองรัก</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q1_option4" name="question1" value="รักฉันไม่เคยเจ็บ" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q1_option4" class="text-lg text-gray-700">รักฉันไม่เคยเจ็บ</label>
+                </div>
+            </div>
+
+            <!-- คำถาม 2 - ปรับใหม่โดยใช้ Grid Layout -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">2. เพลงของ นนท์ ธนนท์ เพลงไหน ยอดวิว ใน Youtube เยอะที่สุด</label>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <!-- Option 1 -->
+                    <div class="question-option">
+                        <div class="flex items-center space-x-2 w-full">
+                            <input type="radio" id="q2_option1" name="question2" value="พิง" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                            <label for="q2_option1" class="text-lg text-gray-700 font-medium">1. พิง</label>
+                        </div>
+                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/215617075600584.jpg?alt=media&token=5725bdd6-b511-49a2-95e4-3556a709e541" alt="พิง">
+                    </div>
+                    <!-- Option 2 -->
+                    <div class="question-option">
+                        <div class="flex items-center space-x-2 w-full">
+                            <input type="radio" id="q2_option2" name="question2" value="ฝืนตัวเองไม่เป็น" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                            <label for="q2_option2" class="text-lg text-gray-700 font-medium">2. ฝืนตัวเองไม่เป็น</label>
+                        </div>
+                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/maxresdefault.jpg?alt=media&token=38c03dd2-eecb-4fac-8d03-ce49bdb92638" alt="ฝืนตัวเองไม่เป็น">
+                    </div>
+                    <!-- Option 3 -->
+                    <div class="question-option">
+                        <div class="flex items-center space-x-2 w-full">
+                            <input type="radio" id="q2_option3" name="question2" value="มีผลต่อหัวใจ" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                            <label for="q2_option3" class="text-lg text-gray-700 font-medium">3. มีผลต่อหัวใจ</label>
+                        </div>
+                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/maxresdefault%20(1).jpg?alt=media&token=62e447c2-eb51-4496-8f30-20a4af8651bc" alt="มีผลต่อหัวใจ">
+                    </div>
+                    <!-- Option 4 -->
+                    <div class="question-option">
+                        <div class="flex items-center space-x-2 w-full">
+                            <input type="radio" id="q2_option4" name="question2" value="ความรักกำลังก่อตัว" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                            <label for="q2_option4" class="text-lg text-gray-700 font-medium">4. ความรักกำลังก่อตัว</label>
+                        </div>
+                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/maxresdefault%20(2).jpg?alt=media&token=3762bb73-ac93-4f22-9e9c-2cb0bccc28b1" alt="ความรักกำลังก่อตัว">
+                    </div>
+                </div>
+            </div>
+
+            <!-- คำถาม 3 -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">3. NONT TANONT ออก The Voice Thailand Season ไหน แล้วจบอันดับเท่าไหร่ แล้วอยู่ทีมโค้ชคนไหน?</label>
+                <!-- Image for Question 3 -->
+                <img class="question-image" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/screen-shot-2012-10-28-at-3-56-49-pm.png?alt=media&token=2c3c3424-4e03-4dce-b4e1-9d140bdda30a" alt="">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q3_option1" name="question3" value="Season 1 จบอันดับ 1" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q3_option1" class="text-lg text-gray-700">Season 1 จบอันดับ 1</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q3_option2" name="question3" value="Season 1 จบอันดับ 2" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q3_option2" class="text-lg text-gray-700">Season 1 จบอันดับ 2</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q3_option3" name="question3" value="Season 2 จบอันดับ 1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q3_option3" class="text-lg text-gray-700">Season 2 จบอันดับ 1</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q3_option4" name="question3" value="Season 2 จบอันดับ 2" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q3_option4" class="text-lg text-gray-700">Season 2 จบอันดับ 2</label>
+                </div>
+            </div>
+
+            <!-- ตัวเลือกโค้ช -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">ทีมโค้ช</label>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="coach1" name="coach_choice" value="ก้อง สหรัถ" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="coach1" class="text-lg text-gray-700">ก้อง สหรัถ</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="coach2" name="coach_choice" value="เจนนิเฟอร์ คิ้ม" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="coach2" class="text-lg text-gray-700">เจนนิเฟอร์ คิ้ม</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="coach3" name="coach_choice" value="แสตมป์ อภิวัชร์" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="coach3" class="text-lg text-gray-700">แสตมป์ อภิวัชร์</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="coach4" name="coach_choice" value="โจอี้ บอย" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="coach4" class="text-lg text-gray-700">โจอี้ บอย</label>
+                </div>
+            </div>
+
+            <!-- คำถาม 4 -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">4. คลิปต่อไปนี้มีเพลงของ NONT TANONT เพลงใดบ้าง?</label>
+                <video controls class="w-full rounded-lg shadow-md">
+                    <source src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/a356b546-58d6-4ce4-9a5b-fbb33d77a2a2.mp4?alt=media&token=fd71206d-a5c0-434c-b181-cd462d007c36" type="video/mp4">
+                    เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                </video>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q4_option1" name="question4" value="โต๊ะริม / วันครบเลิก / ดอกไม้ที่รอฝน / พิง" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q4_option1" class="text-lg text-gray-700">โต๊ะริม / วันครบเลิก / ดอกไม้ที่รอฝน / พิง</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q4_option2" name="question4" value="มีผลต่อหัวใจ / ไม่คุ้นเคย / คิดถึงเธอ / ลองรัก" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q4_option2" class="text-lg text-gray-700">มีผลต่อหัวใจ / ไม่คุ้นเคย / คิดถึงเธอ / ลองรัก</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q4_option3" name="question4" value="โต๊ะริม / อ้อมกอด / The Toy / พิง" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q4_option3" class="text-lg text-gray-700">โต๊ะริม / อ้อมกอด / The Toy / พิง</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q4_option4" name="question4" value="มีผลต่อหัวใจ / วันครบเลิก / ไม่คุ้นเคย / ลองรัก" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q4_option4" class="text-lg text-gray-700">มีผลต่อหัวใจ / วันครบเลิก / ไม่คุ้นเคย / ลองรัก</label>
+                </div>
+            </div>
+
+            <!-- คำถาม 5 -->
+            <div class="space-y-2">
+                <label class="block text-xl font-bold text-gray-700">5. เพลงที่นนท์ ธนนท์ คอลแลบกับ Darlie มีชื่อเพลงว่าอะไร?</label>
+                <img class="question-image-full" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/85015.jpg?alt=media&token=7adea112-abb2-45d5-8bf7-530f5cf5025d" alt="">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q5_option1" name="question5" value="รอยยิ้ม" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q5_option1" class="text-lg text-gray-700">รอยยิ้ม</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q5_option2" name="question5" value="ยิ่งยิ้มยิ่งใกล้" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q5_option2" class="text-lg text-gray-700">ยิ่งยิ้มยิ่งใกล้</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q5_option3" name="question5" value="โลกสดใสเพราะมีเธอ" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q5_option3" class="text-lg text-gray-700">โลกสดใสเพราะมีเธอ</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" id="q5_option4" name="question5" value="โลกสีเขียว" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                    <label for="q5_option4" class="text-lg text-gray-700">โลกสีเขียว</label>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-full shadow-lg hover:shadow-xl transform transition-transform duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-4">
+                บันทึกข้อมูล
+            </button>
+
+        </form>
+
+        <footer class="mt-8 text-center text-sm text-gray-500">
+            <p>&copy; 2024 NONT EP.03 สุรุ่ยสุร่าย CONCERT. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById('data-form');
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxrnOak0X7mo0xneCrme_YFUNsLV-DDIEADAQEapH-oh7hCvwMCL5nvS0NdluZC5w_Q/exec';
+
+            // Function to update the selected option's visual state
+            function updateSelection(selectedDiv) {
+                const options = document.querySelectorAll('.question-option');
+                options.forEach(option => {
+                    option.classList.remove('selected');
+                });
+                selectedDiv.classList.add('selected');
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Display Sweet Alert as loading indicator
+                Swal.fire({
+                    title: 'กำลังบันทึกข้อมูล...',
+                    text: 'โปรดรอสักครู่',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Create FormData from form
+                const formData = new FormData(form);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+
+                // Add 'MAYA' to the formObject for the 'branch' column
+                formObject.branch = 'MAYA';
+
+                // Log the data object to the console for debugging
+                console.log('Form data to be sent:', formObject);
+
+                // Use fetch API to send data to Google Apps Script
+                fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors', // Use no-cors for Google Apps Script to avoid CORS issues
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => {
+                    // Since mode is 'no-cors', response.ok will be false,
+                    // so we can't check for success directly.
+                    // We'll rely on a delayed success message to indicate the request was sent.
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        form.reset(); // Reset form after successful submission
+                        const options = document.querySelectorAll('.question-option');
+                        options.forEach(option => {
+                            option.classList.remove('selected');
+                        });
+                    });
+                })
+                .catch(error => {
+                    Swal.close();
+                    let errorMessage = 'เกิดข้อผิดพลาดในการส่งข้อมูล';
+                    if (error.message) {
+                        errorMessage += ': ' + error.message;
+                    }
+                    console.error('Submission failed:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ผิดพลาด!',
+                        text: errorMessage,
+                        confirmButtonText: 'ตกลง'
+                    });
+                });
+            });
+
+            // Update selection for question 2
+            const question2Options = document.querySelectorAll('input[name="question2"]');
+            question2Options.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    const parentDiv = event.target.closest('.question-option');
+                    if (parentDiv) {
+                        updateSelection(parentDiv);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
