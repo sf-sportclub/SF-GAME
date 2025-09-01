@@ -27,9 +27,9 @@
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: 150px;
-            object-fit: cover;
-            object-position: center;
+            height: 150px; /* Adjust height to be fixed for uniform size */
+            object-fit: cover; /* Use cover to fill the container and crop if needed */
+            object-position: center; /* Center the image */
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         /* Custom styles for horizontal options */
@@ -56,7 +56,7 @@
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: auto;
+            height: auto; /* Allows the image to scale naturally without cropping */
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
     </style>
@@ -146,7 +146,7 @@
 
             <!-- คำถาม 2 - ปรับใหม่โดยใช้ Grid Layout -->
             <div class="space-y-2">
-                <label class="block text-xl font-bold text-gray-700">2. เพลงของ นนท์ ธนนท์ เพลงไหน ยอดวิว ใน Youtube เยอะที่สุด?</label>
+                <label class="block text-xl font-bold text-gray-700">2. จากภาพทั้ง 4 เพลงไหนมียอดวิวเยอะที่สุด?</label>
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <!-- Option 1 -->
                     <div class="question-option">
@@ -288,10 +288,43 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById('data-form');
-            const GAS_URL = 'https://script.google.com/macros/s/AKfycbw1gyrxCqB_SaS5S5AFEE-edN_g1NSAqeb-Dsccln8aqgSnuYrgT3E19LXTFZeVZ6-eRw/exec';
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbwevcuW8FYSwff_KPGLnX7juobanIKNjPGyuwVLROIT7nd3fo0IvfjmHULtBxGLbOGIIw/exec';
 
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // Function to update the selected option's visual state
+            function updateSelection(selectedInput) {
+                const radios = selectedInput.closest('div.space-y-2').querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => {
+                    radio.closest('div.flex.items-center.space-x-2').classList.remove('selected');
+                });
+                selectedInput.closest('div.flex.items-center.space-x-2').classList.add('selected');
+            }
+
+            // Add click listeners to question options to handle visual selection
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', (event) => {
+                    const parentDiv = event.target.closest('div.question-option');
+                    if (parentDiv) {
+                        const radiosInOption = parentDiv.querySelectorAll('input[type="radio"]');
+                        if (radiosInOption.length > 0) {
+                            radiosInOption.forEach(radio => {
+                                radio.closest('.question-option').classList.remove('selected');
+                            });
+                            event.target.closest('.question-option').classList.add('selected');
+                        }
+                    } else {
+                        // For questions without image options, just highlight the label container
+                        const parentContainer = event.target.closest('div.flex.items-center.space-x-2');
+                        const allRadioContainers = event.target.closest('.space-y-2').querySelectorAll('div.flex.items-center.space-x-2');
+                        allRadioContainers.forEach(container => {
+                            container.classList.remove('selected');
+                        });
+                        parentContainer.classList.add('selected');
+                    }
+                });
+            });
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Prevent default form submission
 
                 // Display Sweet Alert as loading indicator
                 Swal.fire({
@@ -316,24 +349,21 @@
                 // Log the data object to the console for debugging
                 console.log('Form data to be sent:', formObject);
 
-                // Send data to Google Apps Script via fetch API
-                fetch(GAS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Important for cross-origin requests
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formObject)
-                })
-                .then(() => {
-                    // Since mode is 'no-cors', we can't read the response.
-                    // Assume success and handle based on previous knowledge.
-                    onSuccess({ success: true, message: "บันทึกข้อมูลสำเร็จแล้ว!" });
-                })
-                .catch(error => {
+                try {
+                    const response = await fetch(scriptUrl, {
+                        method: 'POST',
+                        body: JSON.stringify(formObject),
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8' // Important for Apps Script to parse JSON body
+                        }
+                    });
+
+                    const result = await response.json();
+                    onSuccess(result);
+
+                } catch (error) {
                     onFailure(error);
-                });
+                }
             });
 
             // Function to handle successful submission
@@ -347,9 +377,13 @@
                         confirmButtonText: 'ตกลง'
                     }).then(() => {
                         form.reset(); // Reset form after successful submission
+                        const options = document.querySelectorAll('.question-option, .flex.items-center.space-x-2');
+                        options.forEach(option => {
+                            option.classList.remove('selected');
+                        });
                     });
                 } else {
-                    onFailure(result);
+                    onFailure(result); // If successful but with an issue, call onFailure function
                 }
             }
 
