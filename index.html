@@ -1,37 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <title>Web App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ 1+1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f4f8;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        #question {
+            font-size: 2em;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        #answerInput {
+            padding: 12px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        #answerInput:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        #submitBtn {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #submitBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <input type="text" id="answerInput" placeholder="กรอกคำตอบ">
-    <button onclick="submitAnswer()">ส่ง</button>
+
+    <div class="container">
+        <h1>แบบทดสอบคณิตศาสตร์</h1>
+        <div id="question">1 + 1 เท่ากับเท่าไหร่?</div>
+        <input type="text" id="answerInput" placeholder="กรอกคำตอบของคุณ">
+        <button id="submitBtn">ส่งคำตอบ</button>
+        <div id="result"></div>
+    </div>
 
     <script>
-        // URL ของ Google Apps Script ที่คุณดีพลอยแล้ว
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbwGQVdNql-t1hWyKgi-OQbkNZDg4uOxwwJMH6XzywDzBlHrO4F8lK_81zXOLiRORSNQ/exec';
+        const submitBtn = document.getElementById('submitBtn');
+        const answerInput = document.getElementById('answerInput');
+        const resultDiv = document.getElementById('result');
 
-        async function submitAnswer() {
-            const answer = document.getElementById('answerInput').value;
+        submitBtn.addEventListener('click', async () => {
+            const userAnswer = answerInput.value;
+            resultDiv.textContent = 'กำลังส่ง...';
+            resultDiv.style.color = '#7f8c8d';
 
-            // สร้าง FormData เพื่อส่งข้อมูล
             const formData = new FormData();
-            formData.append('answer', answer);
+            formData.append('answer', userAnswer);
 
             try {
-                // ส่งคำขอ POST ไปยัง Google Apps Script
                 const response = await fetch(scriptUrl, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
                 });
-                
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
                 const result = await response.json();
-                console.log(result); // แสดงผลลัพธ์จาก Apps Script ใน console
-                alert(result.message);
+                
+                if (result.isCorrect) {
+                    resultDiv.textContent = '✅ คำตอบถูกต้อง!';
+                    resultDiv.style.color = '#2ecc71';
+                } else {
+                    resultDiv.textContent = '❌ คำตอบไม่ถูกต้อง!';
+                    resultDiv.style.color = '#e74c3c';
+                }
+
             } catch (error) {
                 console.error('Error:', error);
+                resultDiv.textContent = '❌ เกิดข้อผิดพลาดในการส่งข้อมูล';
+                resultDiv.style.color = '#e74c3c';
             }
-        }
+        });
     </script>
 </body>
 </html>
