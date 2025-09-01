@@ -292,7 +292,7 @@
             // NOTE: The 'Failed to fetch' error is because this URL is a placeholder.
             // **สำคัญมาก!** โปรดแทนที่ URL ด้านล่างด้วย URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
             // The URL should look something like: https://script.google.com/macros/s/xxxxxxxxxxxxxxxxx/exec
-            const webAppUrl = https://script.google.com/macros/s/AKfycbwFd-P7LdyMC7fjC1qGKNIQmPzrYActulWEw_tpgM7nrG_Tnh5XX_sMbGnY7zcDvy8d2Q/exec';
+            const webAppUrl = 'YOUR_WEB_APP_URL_HERE';
 
             // Function to update the selected option's visual state
             function updateSelection(selectedDiv) {
@@ -330,24 +330,19 @@
                 console.log('Form data to be sent:', formObject);
 
                 // Use the modern Fetch API to send data as JSON
+                // เปลี่ยนการตั้งค่า Fetch เพื่อข้าม CORS
                 fetch(webAppUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    mode: 'no-cors', // ตั้งค่าเป็น 'no-cors' เพื่อป้องกันเบราว์เซอร์บล็อก
                     body: JSON.stringify(formObject)
                 })
-                .then(response => {
-                    // Check if the response is ok before parsing JSON
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    onSuccess(result);
+                .then(() => {
+                    // ในโหมด no-cors จะไม่สามารถอ่าน response จาก server ได้
+                    // จึงแสดง pop-up สำเร็จทันทีที่การส่งข้อมูลทาง network สำเร็จ
+                    onSuccess({ success: true, message: 'ข้อมูลของคุณถูกส่งแล้ว' });
                 })
                 .catch(error => {
+                    // This catch block will only fire for network errors, not server-side logic errors.
                     onFailure(error);
                 });
             });
