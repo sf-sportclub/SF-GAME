@@ -6,6 +6,8 @@
     <title>NONT EP.03 สุรุ่ยสุร่าย CONCERT</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Sweet Alert 2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,13 +20,16 @@
             background-position: center;
             background-attachment: fixed;
         }
+        .swal2-container {
+            z-index: 99999;
+        }
         img.question-image {
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: 150px; /* Adjust height to be fixed for uniform size */
-            object-fit: cover; /* Use cover to fill the container and crop if needed */
-            object-position: center; /* Center the image */
+            height: 150px;
+            object-fit: cover;
+            object-position: center;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         /* Custom styles for horizontal options */
@@ -51,7 +56,7 @@
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: auto; /* Allows the image to scale naturally without cropping */
+            height: auto;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
     </style>
@@ -250,7 +255,7 @@
             <!-- คำถาม 5 -->
             <div class="space-y-2">
                 <label class="block text-xl font-bold text-gray-700">5. เพลงที่นนท์ ธนนท์ X Darlie มีชื่อเพลงว่าอะไร?</label>
-                <img class="question-image-full" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/85015.jpg?alt=media&token=7adea112-abb2-45d5-8bf7-530f5cf502d" alt="">
+                <img class="question-image-full" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/85015.jpg?alt=media&token=7adea112-abb2-45d5-8bf7-530f5cf5025d" alt="">
                 <div class="flex items-center space-x-2">
                     <input type="radio" id="q5_option1" name="question5" value="รอยยิ้ม" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
                     <label for="q5_option1" class="text-lg text-gray-700">รอยยิ้ม</label>
@@ -269,10 +274,6 @@
                 </div>
             </div>
 
-            <div id="message-container" class="mt-4 p-4 rounded-md hidden">
-                <p id="message-text" class="text-center font-medium"></p>
-            </div>
-
             <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-full shadow-lg hover:shadow-xl transform transition-transform duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-4">
                 บันทึกข้อมูล
             </button>
@@ -287,21 +288,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById('data-form');
-            const messageContainer = document.getElementById('message-container');
-            const messageText = document.getElementById('message-text');
 
-            // Function to show messages
-            function showMessage(text, isSuccess) {
-                messageContainer.classList.remove('hidden');
-                messageText.textContent = text;
-                if (isSuccess) {
-                    messageContainer.classList.remove('bg-red-100', 'text-red-700');
-                    messageContainer.classList.add('bg-green-100', 'text-green-700');
-                } else {
-                    messageContainer.classList.remove('bg-green-100', 'text-green-700');
-                    messageContainer.classList.add('bg-red-100', 'text-red-700');
-                }
-            }
+            // TODO: **สำคัญมาก!** โปรดแทนที่ URL ด้านล่างด้วย URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbwFd-P7LdyMC7fjC1qGKNIQmPzrYActulWEw_tpgM7nrG_Tnh5XX_sMbGnY7zcDvy8d2Q/exec';
 
             // Function to update the selected option's visual state
             function updateSelection(selectedDiv) {
@@ -312,22 +301,18 @@
                 selectedDiv.classList.add('selected');
             }
 
-            // Add event listeners for the new visual selection logic
-            const questionOptions = document.querySelectorAll('.question-option');
-            questionOptions.forEach(optionDiv => {
-                optionDiv.addEventListener('click', () => {
-                    const radioInput = optionDiv.querySelector('input[type="radio"]');
-                    if (radioInput) {
-                        radioInput.checked = true;
-                        updateSelection(optionDiv);
-                    }
-                });
-            });
-
-            form.addEventListener('submit', async function(e) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault(); // Prevent default form submission
 
-                showMessage('กำลังบันทึกข้อมูล...', false); // Show loading message
+                // Display Sweet Alert as loading indicator
+                Swal.fire({
+                    title: 'กำลังบันทึกข้อมูล...',
+                    text: 'โปรดรอสักครู่',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
                 // Create FormData from form
                 const formData = new FormData(form);
@@ -335,42 +320,76 @@
                 formData.forEach((value, key) => {
                     formObject[key] = value;
                 });
-                
+
                 // Add 'MAYA' to the formObject for the 'branch' column
                 formObject.branch = 'MAYA';
 
-                // NOTE: เปลี่ยน 'YOUR_API_ENDPOINT_URL' เป็น URL API จริงของคุณ
-                const apiEndpoint = 'https://script.google.com/macros/s/AKfycbwFd-P7LdyMC7fjC1qGKNIQmPzrYActulWEw_tpgM7nrG_Tnh5XX_sMbGnY7zcDvy8d2Q/exec'; // Placeholder URL
+                // Log the data object to the console for debugging
+                console.log('Form data to be sent:', formObject);
 
-                try {
-                    const response = await fetch(apiEndpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formObject)
-                    });
+                // Use the modern Fetch API to send data as JSON
+                fetch(webAppUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formObject)
+                })
+                .then(response => {
+                    // Check if the response is ok before parsing JSON
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    onSuccess(result);
+                })
+                .catch(error => {
+                    onFailure(error);
+                });
+            });
 
-                    const result = await response.json();
-
-                    if (response.ok && result.success) {
-                        showMessage('บันทึกข้อมูลสำเร็จ!', true);
+            // Function to handle successful submission
+            function onSuccess(result) {
+                Swal.close(); // Close the loading alert
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: result.message,
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
                         form.reset(); // Reset form after successful submission
                         const options = document.querySelectorAll('.question-option');
                         options.forEach(option => {
                             option.classList.remove('selected');
                         });
-                    } else {
-                        const errorMessage = result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
-                        console.error('Submission failed:', result);
-                        showMessage(errorMessage, false);
-                    }
-
-                } catch (error) {
-                    console.error('Error during API call:', error);
-                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + error.message, false);
+                    });
+                } else {
+                    onFailure(result); // If successful but with an issue, call onFailure function
                 }
-            });
+            }
+
+            // Function to handle submission failure
+            function onFailure(error) {
+                Swal.close(); // Close the loading alert
+                let errorMessage = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                if (error.message) {
+                    errorMessage += ': ' + error.message;
+                } else if (typeof error === 'string') {
+                    errorMessage += ': ' + error;
+                }
+
+                console.error('Submission failed:', error); // Log the error to the console
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ผิดพลาด!',
+                    text: errorMessage,
+                    confirmButtonText: 'ตกลง'
+                });
+            }
         });
     </script>
 </body>
