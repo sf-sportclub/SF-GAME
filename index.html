@@ -328,46 +328,26 @@
                 console.log('Form data to be sent:', formObject);
 
                 try {
-                    // **แก้ไข:** ลบ mode: 'no-cors' เพื่อให้สามารถรับ response จาก server ได้
-                    // การทำแบบนี้จะทำให้เบราว์เซอร์ตรวจสอบ CORS ซึ่ง Google Apps Script ได้ตั้งค่าไว้แล้ว
-                    const response = await fetch(webAppUrl, {
+                    // ใช้ mode: 'no-cors' ตามที่ร้องขอ ซึ่งจะทำให้ไม่สามารถอ่าน response จาก server ได้โดยตรง
+                    await fetch(webAppUrl, {
                         method: 'POST',
-                        body: JSON.stringify(formObject)
+                        body: JSON.stringify(formObject),
+                        mode: 'no-cors'
                     });
 
-                    // **แก้ไข:** ตรวจสอบว่า response จาก server สำเร็จหรือไม่ (status code 2xx)
-                    if (!response.ok) {
-                        throw new Error(`Server returned status: ${response.status}`);
-                    }
-
-                    // **แก้ไข:** แปลง response เป็น JSON เพื่ออ่านข้อมูล
-                    // หาก Google Apps Script ส่ง response กลับมา เช่น { "success": true, "message": "..." }
-                    // ส่วนนี้จะรับข้อมูลนั้นมา
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        // Success path
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'สำเร็จ!',
-                            text: result.message || 'ข้อมูลของคุณถูกส่งแล้ว',
-                            confirmButtonText: 'ตกลง'
-                        }).then(() => {
-                            form.reset(); // Reset form after successful submission
-                            const options = document.querySelectorAll('.question-option');
-                            options.forEach(option => {
-                                option.classList.remove('selected');
-                            });
+                    // เมื่อ fetch สำเร็จ (แม้จะไม่ได้เช็ค status) ให้แสดงข้อความสำเร็จ
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: 'ข้อมูลของคุณถูกส่งแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        form.reset(); // Reset form after successful submission
+                        const options = document.querySelectorAll('.question-option');
+                        options.forEach(option => {
+                            option.classList.remove('selected');
                         });
-                    } else {
-                        // Server-side logic error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'ผิดพลาด!',
-                            text: result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
-                            confirmButtonText: 'ตกลง'
-                        });
-                    }
+                    });
 
                 } catch (error) {
                     // Network or other error
