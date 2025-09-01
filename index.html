@@ -162,7 +162,7 @@
                             <input type="radio" id="q2_option2" name="question2" value="ฝืนตัวเองไม่เป็น" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
                             <label for="q2_option2" class="text-lg text-gray-700 font-medium">2. ฝืนตัวเองไม่เป็น</label>
                         </div>
-                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/maxresdefault.jpg?alt=media&token=38c03dd2-eecb-4fac-8d03-ce49bdb92638" alt="ฝืนตัวเองไม่เป็น">
+                        <img class="question-image mt-2" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/maxresdefault.jpg?alt=media&token=38c03dd6-eecb-4fac-8d03-ce49bdb92638" alt="ฝืนตัวเองไม่เป็น">
                     </div>
                     <!-- Option 3 -->
                     <div class="question-option">
@@ -289,9 +289,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById('data-form');
 
-            // NOTE: The 'Failed to fetch' error is because this URL is a placeholder.
             // **สำคัญมาก!** โปรดแทนที่ URL ด้านล่างด้วย URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
-            // The URL should look something like: https://script.google.com/macros/s/xxxxxxxxxxxxxxxxx/exec
             const webAppUrl = 'https://script.google.com/macros/s/AKfycbxHqCu2_hR_QiFTqAzlwXwWoktVrSKVLtsh4feSNzBdoDQqn1GT69FetFsFjIOXKyKHqw/exec';
 
             // Function to update the selected option's visual state
@@ -303,7 +301,7 @@
                 selectedDiv.classList.add('selected');
             }
 
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault(); // Prevent default form submission
 
                 // Display Sweet Alert as loading indicator
@@ -329,64 +327,75 @@
                 // Log the data object to the console for debugging
                 console.log('Form data to be sent:', formObject);
 
-                // Use the modern Fetch API to send data as JSON
-                // เปลี่ยนการตั้งค่า Fetch เพื่อข้าม CORS
-                fetch(webAppUrl, {
-                    method: 'POST',
-                    mode: 'no-cors', // ตั้งค่าเป็น 'no-cors' เพื่อป้องกันเบราว์เซอร์บล็อก
-                    body: JSON.stringify(formObject)
-                })
-                .then(() => {
-                    // ในโหมด no-cors จะไม่สามารถอ่าน response จาก server ได้
-                    // จึงแสดง pop-up สำเร็จทันทีที่การส่งข้อมูลทาง network สำเร็จ
-                    onSuccess({ success: true, message: 'ข้อมูลของคุณถูกส่งแล้ว' });
-                })
-                .catch(error => {
-                    // This catch block will only fire for network errors, not server-side logic errors.
-                    onFailure(error);
-                });
+                try {
+                    // **แก้ไข:** ลบ mode: 'no-cors' เพื่อให้สามารถรับ response จาก server ได้
+                    // การทำแบบนี้จะทำให้เบราว์เซอร์ตรวจสอบ CORS ซึ่ง Google Apps Script ได้ตั้งค่าไว้แล้ว
+                    const response = await fetch(webAppUrl, {
+                        method: 'POST',
+                        body: JSON.stringify(formObject)
+                    });
+
+                    // **แก้ไข:** ตรวจสอบว่า response จาก server สำเร็จหรือไม่ (status code 2xx)
+                    if (!response.ok) {
+                        throw new Error(`Server returned status: ${response.status}`);
+                    }
+
+                    // **แก้ไข:** แปลง response เป็น JSON เพื่ออ่านข้อมูล
+                    // หาก Google Apps Script ส่ง response กลับมา เช่น { "success": true, "message": "..." }
+                    // ส่วนนี้จะรับข้อมูลนั้นมา
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Success path
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สำเร็จ!',
+                            text: result.message || 'ข้อมูลของคุณถูกส่งแล้ว',
+                            confirmButtonText: 'ตกลง'
+                        }).then(() => {
+                            form.reset(); // Reset form after successful submission
+                            const options = document.querySelectorAll('.question-option');
+                            options.forEach(option => {
+                                option.classList.remove('selected');
+                            });
+                        });
+                    } else {
+                        // Server-side logic error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'ผิดพลาด!',
+                            text: result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
+                            confirmButtonText: 'ตกลง'
+                        });
+                    }
+
+                } catch (error) {
+                    // Network or other error
+                    console.error('Submission failed:', error);
+                    let errorMessage = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                    if (error.message) {
+                        errorMessage += `: ${error.message}`;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ผิดพลาด!',
+                        text: errorMessage,
+                        confirmButtonText: 'ตกลง'
+                    });
+                }
             });
 
-            // Function to handle successful submission
-            function onSuccess(result) {
-                Swal.close(); // Close the loading alert
-                if (result.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'สำเร็จ!',
-                        text: result.message,
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        form.reset(); // Reset form after successful submission
-                        const options = document.querySelectorAll('.question-option');
-                        options.forEach(option => {
-                            option.classList.remove('selected');
-                        });
-                    });
-                } else {
-                    onFailure(result); // If successful but with an issue, call onFailure function
-                }
-            }
-
-            // Function to handle submission failure
-            function onFailure(error) {
-                Swal.close(); // Close the loading alert
-                let errorMessage = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
-                if (error.message) {
-                    errorMessage += ': ' + error.message;
-                } else if (typeof error === 'string') {
-                    errorMessage += ': ' + error;
-                }
-
-                console.error('Submission failed:', error); // Log the error to the console
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ผิดพลาด!',
-                    text: errorMessage,
-                    confirmButtonText: 'ตกลง'
+            // Add event listeners for the new visual selection logic
+            document.querySelectorAll('.question-option').forEach(optionDiv => {
+                optionDiv.addEventListener('click', () => {
+                    const radio = optionDiv.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        updateSelection(optionDiv);
+                    }
                 });
-            }
+            });
         });
     </script>
 </body>
