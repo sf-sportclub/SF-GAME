@@ -314,57 +314,52 @@
                     }
                 });
 
-                // Create FormData from form
                 const formData = new FormData(form);
                 const formObject = {};
                 formData.forEach((value, key) => {
                     formObject[key] = value;
                 });
 
-                // Add 'MAYA' to the formObject for the 'branch' column
                 formObject.branch = 'MAYA';
 
-                // Log the data object to the console for debugging
                 console.log('Form data to be sent:', formObject);
 
                 try {
-                    // ใช้ mode: 'no-cors' ตามที่ร้องขอ ซึ่งจะทำให้ไม่สามารถอ่าน response จาก server ได้โดยตรง
-                    await fetch(webAppUrl, {
+                    const response = await fetch(webAppUrl, {
                         method: 'POST',
                         body: JSON.stringify(formObject),
-                        // เพิ่ม headers ตามที่ร้องขอ
                         headers: {
-                            'Content-Type': 'text/plain;charset=utf-8'
+                            'Content-Type': 'application/json' // แก้ไขเป็น application/json
                         },
-                        mode: 'no-cors'
+                        mode: 'cors' // แก้ไขเป็น cors
                     });
 
-                    // เมื่อ fetch สำเร็จ (แม้จะไม่ได้เช็ค status) ให้แสดงข้อความสำเร็จ
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'สำเร็จ!',
-                        text: 'ข้อมูลของคุณถูกส่งแล้ว',
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        form.reset(); // Reset form after successful submission
-                        const options = document.querySelectorAll('.question-option');
-                        options.forEach(option => {
-                            option.classList.remove('selected');
-                        });
-                    });
-
-                } catch (error) {
-                    // Network or other error
-                    console.error('Submission failed:', error);
-                    let errorMessage = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
-                    if (error.message) {
-                        errorMessage += `: ${error.message}`;
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.result === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'สำเร็จ!',
+                                text: 'ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว',
+                                confirmButtonText: 'ตกลง'
+                            }).then(() => {
+                                form.reset();
+                                const options = document.querySelectorAll('.question-option');
+                                options.forEach(option => option.classList.remove('selected'));
+                            });
+                        } else {
+                            throw new Error(result.message || 'Error from Apps Script');
+                        }
+                    } else {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
 
+                } catch (error) {
+                    console.error('Submission failed:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'ผิดพลาด!',
-                        text: errorMessage,
+                        text: `เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`,
                         confirmButtonText: 'ตกลง'
                     });
                 }
