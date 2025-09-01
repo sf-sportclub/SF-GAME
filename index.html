@@ -289,8 +289,10 @@
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById('data-form');
 
-            // TODO: **สำคัญมาก!** โปรดแทนที่ URL ด้านล่างด้วย URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbwFd-P7LdyMC7fjC1qGKNIQmPzrYActulWEw_tpgM7nrG_Tnh5XX_sMbGnY7zcDvy8d2Q/exec';
+            // NOTE: The 'Failed to fetch' error is because this URL is a placeholder.
+            // **สำคัญมาก!** โปรดแทนที่ URL ด้านล่างด้วย URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
+            // The URL should look something like: https://script.google.com/macros/s/xxxxxxxxxxxxxxxxx/exec
+            const webAppUrl = https://script.google.com/macros/s/AKfycbwFd-P7LdyMC7fjC1qGKNIQmPzrYActulWEw_tpgM7nrG_Tnh5XX_sMbGnY7zcDvy8d2Q/exec';
 
             // Function to update the selected option's visual state
             function updateSelection(selectedDiv) {
