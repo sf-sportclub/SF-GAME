@@ -27,9 +27,9 @@
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: 150px; /* Adjust height to be fixed for uniform size */
-            object-fit: cover; /* Use cover to fill the container and crop if needed */
-            object-position: center; /* Center the image */
+            height: 150px;
+            object-fit: cover;
+            object-position: center;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
         /* Custom styles for horizontal options */
@@ -56,7 +56,7 @@
             border-radius: 12px;
             margin-top: 8px;
             width: 100%;
-            height: auto; /* Allows the image to scale naturally without cropping */
+            height: auto;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
     </style>
@@ -65,8 +65,7 @@
 
     <div class="bg-white bg-opacity-80 shadow-2xl rounded-3xl p-6 sm:p-10 w-full max-w-2xl transform transition-transform duration-500 hover:scale-105">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold text-gray-800">NONT EP.03 สุรุ่ยสุร่าย CONCERT</h1>
-            <p class="mt-2 text-lg text-gray-600">กรุณากรอกข้อมูลเพื่อเข้าร่วมงาน</p>
+            <h1 class="text-4xl font-extrabold text-gray-800">ร่วมสนุกลุ้นรับบัตรคอนเสิร์ต NONT EP.03 สุรุ่ยสุร่าย เพียงตอบคำถามให้รวดเร็วและถูกต้องที่สุด</h1>
         </div>
 
         <form id="data-form" class="space-y-6">
@@ -121,10 +120,10 @@
 
             <!-- คำถาม 1 -->
             <div class="space-y-2">
-                <label class="block text-xl font-bold text-gray-700">1. เพลงนี้ชื่อเพลงอะไร</label>
+                <label class="block text-xl font-bold text-gray-700">1. เพลงนี้ชื่อเพลงอะไร?</label>
                 <!-- Video for Question 1 -->
                 <video controls>
-                    <source src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/66b33c4f-a791-4adb-ae14-2d99fe870417.mp4?alt=media&token=4fb49acb-d25c-4cd2-a9af-f0786f09c9ec" type="video/mp4">
+                    <source src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/6594770c-81da-48dc-9de6-da816515ea8b.mp4?alt=media&token=6d94852e-69d4-459e-88bb-1386c9217c70" type="video/mp4">
                     เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
                 </video>
                 <div class="flex items-center space-x-2">
@@ -147,7 +146,7 @@
 
             <!-- คำถาม 2 - ปรับใหม่โดยใช้ Grid Layout -->
             <div class="space-y-2">
-                <label class="block text-xl font-bold text-gray-700">2. เพลงของ นนท์ ธนนท์ เพลงไหน ยอดวิว ใน Youtube เยอะที่สุด</label>
+                <label class="block text-xl font-bold text-gray-700">2. เพลงของ นนท์ ธนนท์ เพลงไหน ยอดวิว ใน Youtube เยอะที่สุด?</label>
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <!-- Option 1 -->
                     <div class="question-option">
@@ -255,7 +254,7 @@
 
             <!-- คำถาม 5 -->
             <div class="space-y-2">
-                <label class="block text-xl font-bold text-gray-700">5. เพลงที่นนท์ ธนนท์ คอลแลบกับ Darlie มีชื่อเพลงว่าอะไร?</label>
+                <label class="block text-xl font-bold text-gray-700">5. เพลงที่นนท์ ธนนท์ X Darlie มีชื่อเพลงว่าอะไร?</label>
                 <img class="question-image-full" src="https://firebasestorage.googleapis.com/v0/b/pichayut-40dd2.firebasestorage.app/o/85015.jpg?alt=media&token=7adea112-abb2-45d5-8bf7-530f5cf5025d" alt="">
                 <div class="flex items-center space-x-2">
                     <input type="radio" id="q5_option1" name="question5" value="รอยยิ้ม" required class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
@@ -289,19 +288,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById('data-form');
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxrnOak0X7mo0xneCrme_YFUNsLV-DDIEADAQEapH-oh7hCvwMCL5nvS0NdluZC5w_Q/exec';
-
-            // Function to update the selected option's visual state
-            function updateSelection(selectedDiv) {
-                const options = document.querySelectorAll('.question-option');
-                options.forEach(option => {
-                    option.classList.remove('selected');
-                });
-                selectedDiv.classList.add('selected');
-            }
+            const GAS_URL = 'https://script.google.com/macros/s/AKfycbw1gyrxCqB_SaS5S5AFEE-edN_g1NSAqeb-Dsccln8aqgSnuYrgT3E19LXTFZeVZ6-eRw/exec';
 
             form.addEventListener('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault();
 
                 // Display Sweet Alert as loading indicator
                 Swal.fire({
@@ -326,59 +316,62 @@
                 // Log the data object to the console for debugging
                 console.log('Form data to be sent:', formObject);
 
-                // Use fetch API to send data to Google Apps Script
-                fetch(scriptUrl, {
+                // Send data to Google Apps Script via fetch API
+                fetch(GAS_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Use no-cors for Google Apps Script to avoid CORS issues
+                    mode: 'no-cors', // Important for cross-origin requests
+                    cache: 'no-cache',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(formObject)
                 })
-                .then(response => {
-                    // Since mode is 'no-cors', response.ok will be false,
-                    // so we can't check for success directly.
-                    // We'll rely on a delayed success message to indicate the request was sent.
-                    Swal.close();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'สำเร็จ!',
-                        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
-                        confirmButtonText: 'ตกลง'
-                    }).then(() => {
-                        form.reset(); // Reset form after successful submission
-                        const options = document.querySelectorAll('.question-option');
-                        options.forEach(option => {
-                            option.classList.remove('selected');
-                        });
-                    });
+                .then(() => {
+                    // Since mode is 'no-cors', we can't read the response.
+                    // Assume success and handle based on previous knowledge.
+                    onSuccess({ success: true, message: "บันทึกข้อมูลสำเร็จแล้ว!" });
                 })
                 .catch(error => {
-                    Swal.close();
-                    let errorMessage = 'เกิดข้อผิดพลาดในการส่งข้อมูล';
-                    if (error.message) {
-                        errorMessage += ': ' + error.message;
-                    }
-                    console.error('Submission failed:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ผิดพลาด!',
-                        text: errorMessage,
-                        confirmButtonText: 'ตกลง'
-                    });
+                    onFailure(error);
                 });
             });
 
-            // Update selection for question 2
-            const question2Options = document.querySelectorAll('input[name="question2"]');
-            question2Options.forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    const parentDiv = event.target.closest('.question-option');
-                    if (parentDiv) {
-                        updateSelection(parentDiv);
-                    }
+            // Function to handle successful submission
+            function onSuccess(result) {
+                Swal.close(); // Close the loading alert
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สำเร็จ!',
+                        text: result.message,
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        form.reset(); // Reset form after successful submission
+                    });
+                } else {
+                    onFailure(result);
+                }
+            }
+
+            // Function to handle submission failure
+            function onFailure(error) {
+                Swal.close(); // Close the loading alert
+                let errorMessage = 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                if (error.message) {
+                    errorMessage += ': ' + error.message;
+                } else if (typeof error === 'string') {
+                    errorMessage += ': ' + error;
+                }
+
+                console.error('Submission failed:', error); // Log the error to the console
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ผิดพลาด!',
+                    text: errorMessage,
+                    confirmButtonText: 'ตกลง'
                 });
-            });
+            }
         });
     </script>
 </body>
